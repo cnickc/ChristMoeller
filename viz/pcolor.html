@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>pcolor demo</title>
+<script type='text/javascript' src='darkjet.js'></script>
+
+</head>
+<body>
+    <canvas width="512" height="50" id="cv"></canvas>
+    <br>
+    <canvas width="512" height="512" id="pc"></canvas>	
+</body>
+
+<script>
+
+
+// This function maps data to a color (right now assumes there are 256 colours
+// in a colormap).
+
+// TODO: Put all methods into appropriate classes (e.g., colorbar, dataplot), 
+// and move `data' operations to the ElevationData.js class.
+
+function data2Color(data) {
+
+    var maxval = max2D(data);
+    var minval = min2D(data);
+
+    var colors = [];   
+
+    for (var row =0; row < data.length; row++) {
+        colors[row] = new Array(data[0].length);
+        for (var col=0; col < data[0].length; col++) {
+            colors[row][col] = (data[row][col]-minval)*(255/(maxval-minval));
+        }
+    }
+
+    return colors;
+}
+
+function max2D(data) {
+    var tempVals = [];
+    for (var row=0; row < data.length; row++) {
+        tempVals[row] = Math.max.apply(null,data[row]);
+    }
+
+    return Math.max.apply(null, tempVals);    
+}
+
+function min2D(data) {
+    var tempVals = [];
+    for (var row=0; row < data.length; row++) {
+        tempVals[row] = Math.min.apply(null,data[row]);
+    }
+
+    return Math.min.apply(null, tempVals);    
+}
+
+var cv  = document.getElementById('cv');
+var colormap = darkjet(256);
+colorbar(cv.getContext('2d'), colormap);
+
+ctx = pc.getContext('2d');
+
+
+// Create a field.
+var Nx=256;
+var Ny=256;
+
+var x = linspace(-6,6,Nx);
+var y = linspace(-6,6,Ny);
+
+var data=[];
+for (var row=0; row< Ny; row++) {
+    data[row] = new Array(Nx);
+    for (var col=0; col<Nx; col++) {
+        data[row][col] = Math.exp(-Math.pow(x[col],2) -Math.pow(y[row],2) );        
+    }
+}
+
+
+drawPseudoColor(data, ctx, colormap);
+
+function drawPseudoColor(data, ctx, colormap) {
+    var colors = data2Color(data);
+
+    var numCols = data[0].length;
+    var numRows = data.length;
+
+    var dx = 512/numCols;
+    var dy = 512/numRows;
+
+    var color='';
+    var junk=[];
+
+    for (var row=0; row<numRows; row++) {
+        for (var col=0; col<numCols; col++) {
+            junk = colormap[Math.round(colors[row][col])];
+            color = 'rgb('+ Math.round(junk[0]) +', ' + Math.round(junk[1]) + ', ' + Math.round(junk[2]) + ')';
+            ctx.beginPath();
+            ctx.fillStyle = color;
+            ctx.fillRect(col*dx, row*dy, dx, dy);   
+            ctx.closePath();
+        }
+    }
+}
+
+</script>
+
+</html>
