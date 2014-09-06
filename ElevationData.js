@@ -45,5 +45,21 @@ ElevationData.prototype = {
 	
 	getCoordinateArray: function () {
 		return new Array();
+	},
+	
+	max2D: function ( data ) {
+		var tempVals = [];
+		for (var row=0; row < data.length; row++) {
+			tempVals[row] = Math.max.apply(null,data[row]);
+		}
+		return Math.max.apply(null, tempVals);    		
+	},
+	
+	min2D: function ( data ) {
+		var tempVals = [];
+		for (var row=0; row < data.length; row++) {
+			tempVals[row] = Math.min.apply(null,data[row]);
+		}
+		return Math.min.apply(null, tempVals);    
 	}
 }
