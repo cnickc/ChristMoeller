@@ -18,8 +18,8 @@ function ElevationData( lat, lon, length, sqrtNumPoints ) {
 	for ( var idx1 = 0; idx1 < sqrtNumPoints; idx1++ ) {
 		//create hash-table as necessary
 		var tmpLat = this.lat + delta * idx1;
-		if( typeof elevation[tmpLat] == "undefined" ) {
-			elevation[tmpLat] = {};
+		if( typeof this.elevation[tmpLat] == "undefined" ) {
+			this.elevation[tmpLat] = {};
 		}
 
 		for ( var idx2 = 0; idx2 < sqrtNumPoints; idx2++ ) {
@@ -27,7 +27,7 @@ function ElevationData( lat, lon, length, sqrtNumPoints ) {
 
 			//TODO - this is just a placeholder.  Need to get data from files to place
 			// in here.
-			elevation[tmpLat][tmpLon] = 100 + 50*Math.cos(tmpLat)*Math.cos(tmpLon);		
+			this.elevation[tmpLat][tmpLon] = 100 + 50*Math.cos(tmpLat)*Math.cos(tmpLon);		
 		}
 	}
 
